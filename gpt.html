@@ -1,0 +1,49 @@
+<head>
+    <script async src="https://securepubads.g.doubleclick.net/tag/js/gpt.js" crossorigin="anonymous" ></script>
+    <script>    
+        window.googletag = window.googletag || { cmd: [] };
+
+            googletag.cmd.push(() => {
+            // Define ad slots.
+            googletag.pubads().setTargeting('yb_target', 'alwayson-adnamitest');
+
+            googletag
+                .defineSlot("/21809957681,22360120824/madensverden.dk/madensverden.dk/billboard_1", [930, 180], "div-gpt-ad-billboard_1")
+                .addService(googletag.pubads());
+
+            // This listener will be called when an impression is considered viewable.
+            googletag.pubads().addEventListener("impressionViewable", (event) => {
+                const slotId = event.slot.getSlotElementId();
+            });
+
+            // Enable SRA and services.
+            googletag.pubads().enableSingleRequest();
+            googletag.enableServices();
+            });    
+    </script>
+</head>
+<body>  
+    <div id="div-gpt-ad-billboard_1">
+    <script>
+        googletag.cmd.push(function () {
+          // Request and render all previously defined ad slots.
+          googletag.display("div-gpt-ad-billboard_1");
+        });
+      </script>
+    </div>
+</body>
+
+
+<head>
+    <script src="https://sM2jrWhrfkRNS6Bjc.ay.delivery/manager/sM2jrWhrfkRNS6Bjc" type="text/javascript" referrerpolicy="no-referrer-when-downgrade"></script>
+</head>
+<body>
+    <div data-ay-manager-id="div-gpt-ad-billboard_1_test">
+        <script type="text/javascript">
+            window.ayManagerEnv = window.ayManagerEnv || { cmd : []};
+            window.ayManagerEnv.cmd.push(function() {
+                ayManagerEnv.display("div-gpt-ad-billboard_1_test");
+            });
+        </script>
+    </div>
+</body>
