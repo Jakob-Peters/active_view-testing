@@ -24,6 +24,10 @@
                 .defineSlot("/21809957681/step/stepclient.dk/billboard_1", [930, 180], "div-gpt-ad-billboard_1_gpt")
                 .addService(googletag.pubads());
 
+            googletag.defineSlot("/21809957681/step/stepclient.dk/topscroll_desktop", [1, 2], "div-gpt-ad-topscroll_desktop_gpt")
+            .addService(googletag.pubads());
+                
+
             googletag.pubads().addEventListener("slotRequested", (event) => {
                 const slotId = event.slot.getSlotElementId();
                 console.log("Ad Slot Requested:", slotId);
@@ -132,6 +136,7 @@
             </script>
         </div>
     </div>
+    <!-- 
     <div data-ay-manager-id="div-gpt-ad-topscroll_desktop" class="topscroll_ad-unit">
         <script type="text/javascript">
             window.ayManagerEnv = window.ayManagerEnv || { cmd : []};
@@ -139,6 +144,14 @@
                 ayManagerEnv.display("div-gpt-ad-topscroll_desktop");
             });
         </script>
+    </div> -->
+    <div id="div-gpt-ad-topscroll_desktop_gpt"></div>
+        <script>
+            googletag.cmd.push(() => {
+                googletag.display("div-gpt-ad-topscroll_desktop_gpt");
+            });
+        </script>
     </div>
+
 </body>
 </html>
