@@ -17,6 +17,11 @@
     -->
     <script>
         window.googletag = window.googletag || { cmd: [] };
+
+        let startTime = Date.now(); // Record when the script starts
+        let lastEventTime = startTime; // Track the last event time for relative differences
+        const eventLog = []; // Array to store all event details
+
         googletag.cmd.push(() => {
             googletag.pubads().setTargeting('yb_target', 'alwayson-adnamitest-topscroll');
 
@@ -25,23 +30,98 @@
                 .addService(googletag.pubads());
 
             googletag.defineSlot("/21809957681/step/stepclient.dk/topscroll_desktop", [1, 2], "div-gpt-ad-topscroll_desktop_gpt")
-            .addService(googletag.pubads());
-                
+                .addService(googletag.pubads());
+
+            const logEventWithTimeline = (eventName, slotId) => {
+                const currentTime = Date.now();
+                const elapsedTime = currentTime - startTime; // Absolute time since the script started
+                const timeDiff = currentTime - lastEventTime; // Relative time since the last event
+                lastEventTime = currentTime; // Update last event time
+
+                // Add event details to log
+                eventLog.push({
+                    Event: eventName,
+                    "Slot ID": slotId || "N/A",
+                    "Elapsed Time (ms)": elapsedTime,
+                    "Time Since Last Event (ms)": timeDiff,
+                });
+            };
 
             googletag.pubads().addEventListener("slotRequested", (event) => {
                 const slotId = event.slot.getSlotElementId();
-                console.log("Ad Slot Requested:", slotId);
+                logEventWithTimeline("slotRequested", slotId);
             });
 
             googletag.pubads().addEventListener("impressionViewable", (event) => {
                 const slotId = event.slot.getSlotElementId();
-                console.log("GPT.js Ad Impression Viewable:", slotId);
+                logEventWithTimeline("impressionViewable", slotId);
+            });
+
+            googletag.pubads().addEventListener("slotRenderEnded", (event) => {
+                const slotId = event.slot.getSlotElementId();
+                logEventWithTimeline("slotRenderEnded", slotId);
             });
 
             googletag.pubads().enableSingleRequest();
             googletag.enableServices();
         });
-    </script>
+
+        // Tracking events to be used in console - For Adnami events
+        window.addEventListener('message', (event) => {
+            try {
+                let data;
+
+                if (typeof event.data === 'string') {
+                    data = JSON.parse(event.data); // Attempt to parse JSON string data
+                } else if (typeof event.data === 'object') {
+                    data = event.data; // If event.data is already an object, use it directly
+                }
+
+                if (data) {
+                    const currentTime = Date.now();
+                    const elapsedTime = currentTime - startTime; // Absolute time since the script started
+                    const timeDiff = currentTime - lastEventTime; // Relative time since the last event
+                    lastEventTime = currentTime; // Update last event time
+
+                    if (data.type === 'ADSM_RMB_ADS_INIT') {
+                        const formatType = data.payload?.formatType || "Unknown";
+                        eventLog.push({
+                            Event: "ADSM_RMB_ADS_INIT",
+                            "Slot ID": formatType,
+                            "Elapsed Time (ms)": elapsedTime,
+                            "Time Since Last Event (ms)": timeDiff,
+                        });
+                    } else if (data.type === 'adnm-bridge-track') {
+                        const eventType = data.event || "Unknown";
+                        eventLog.push({
+                            Event: "adnm-bridge-track",
+                            "Slot ID": eventType,
+                            "Elapsed Time (ms)": elapsedTime,
+                            "Time Since Last Event (ms)": timeDiff,
+                        });
+                    } else {
+                        // No need to log non-matching events for now
+                    }
+                }
+            } catch (e) {
+                console.error('Error processing event data:', e, 'Raw data:', event.data);
+            }
+        });
+
+        // Function to manually display the event log table
+        window.showEventLog = () => {
+            console.table(eventLog);
+            console.log('Event log table displayed manually.');
+        };
+
+        // Display the complete event log as a table when the window unloads
+        window.addEventListener("beforeunload", () => {
+            console.table(eventLog);
+        });
+</script>
+
+    
+
 
     <style>
         /* Button Styling */
@@ -118,15 +198,17 @@
 
     <div class="container">
         <!-- GPT.js Ad Unit -->
+         <!-- 
         <div id="div-gpt-ad-billboard_1_gpt" class="ad-unit">
             <script>
                 googletag.cmd.push(() => {
                     googletag.display("div-gpt-ad-billboard_1_gpt");
                 });
             </script>
-        </div>
+        </div> -->
 
         <!-- Assertive Yield Ad Unit -->
+        <!-- 
         <div data-ay-manager-id="div-gpt-ad-billboard_1_test" class="ad-unit">
             <script type="text/javascript">
                 window.ayManagerEnv = window.ayManagerEnv || { cmd: [] };
@@ -134,7 +216,7 @@
                     ayManagerEnv.display("div-gpt-ad-billboard_1_test");
                 });
             </script>
-        </div>
+        </div> -->
     </div>
     <!-- 
     <div data-ay-manager-id="div-gpt-ad-topscroll_desktop" class="topscroll_ad-unit">

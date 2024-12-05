@@ -31,16 +31,52 @@
 
             googletag.pubads().addEventListener("slotRequested", (event) => {
                 const slotId = event.slot.getSlotElementId();
-                console.log("Ad Slot Requested:", slotId);
+                console.log("SN: Ad Slot Requested:", slotId);
             });
 
             googletag.pubads().addEventListener("impressionViewable", (event) => {
                 const slotId = event.slot.getSlotElementId();
-                console.log("GPT.js Ad Impression Viewable:", slotId);
+                console.log("SN: Ad Impression Viewable:", slotId);
             });
 
+            googletag.pubads().addEventListener("slotRenderEnded", (event) => {
+                const slotId = event.slot.getSlotElementId();
+                console.log("SN: Ad impression rendered:", slotId);
+            });
+        
             googletag.pubads().enableSingleRequest();
             googletag.enableServices();
+        });
+
+        // Tracking events to be used in console - For Adnami events
+        window.addEventListener('message', (event) => {
+            try {
+                let data;
+
+                if (typeof event.data === 'string') {
+                    // Attempt to parse JSON string data
+                    data = JSON.parse(event.data);
+                } else if (typeof event.data === 'object') {
+                    // If event.data is already an object, use it directly
+                    data = event.data;
+                }
+
+                if (data) {
+                    // Check for ADSM_RMB_ADS_INIT event
+                    if (data.type === 'ADSM_RMB_ADS_INIT') {
+                        console.log(`SN: ADSM_RMB_ADS_INIT event received:`, data);
+                    }
+                    // Check for adnm-bridge-track event
+                    else if (data.type === 'adnm-bridge-track') {
+                        console.log(`SN: adnm-bridge-track event received:`, data);
+                    } else {
+                        // Log non-matching events
+                        console.log('Non-matching event received:', data);
+                    }
+                }
+            } catch (e) {
+                console.error('Error processing event data:', e, 'Raw data:', event.data);
+            }
         });
     </script>
 
